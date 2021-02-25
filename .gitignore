@@ -2,3 +2,5 @@
 /.bundle
 /vendor/bundle
 /Gemfile.lock
+/cache/*
+!/cache/.keep
