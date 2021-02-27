@@ -40,5 +40,9 @@ module ErogeImeDic::ErogameScape
         end
       end
     end
+
+    def brands
+      query("SELECT id,brandname,brandfurigana FROM brandlist WHERE kind = 'CORPORATION'")
+    end
   end
 end

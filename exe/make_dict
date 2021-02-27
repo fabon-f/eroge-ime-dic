@@ -3,25 +3,8 @@
 
 require_relative "../lib/eroge_ime_dic"
 
-def restore_cache(path, &block)
-  File.open(path) do |f|
-    return Marshal.restore(f)
-  end
-rescue Errno::ENOENT
-  obj = yield
-  File.open(path, "w") do |f|
-    Marshal.dump(obj, f)
-  end
-  obj
-end
-
-using ErogeImeDic::Util
-
-cache_directory = File.expand_path("../cache", __dir__)
-
-characters = restore_cache(File.join(cache_directory, "characters")) { ErogeImeDic::ErogameScape.characters }
-
-data = characters.map{[_1["furigana"].gsub(/\s+/, "").to_hiragana, _1["name"].gsub(/\s+/, "")]}
+data = ErogeImeDic::DictionarySource.characters
+data.concat(ErogeImeDic::DictionarySource.brands)
 
 dic_builder = ErogeImeDic::DictionaryBuilder.new(data: data)
 File.open("eroge-dic-mozc", "w") do |f|
