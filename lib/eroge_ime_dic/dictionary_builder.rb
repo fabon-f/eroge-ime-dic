@@ -10,7 +10,7 @@ class ErogeImeDic::DictionaryBuilder
 
   def generate_mozc(io)
     io.puts(header_comment.gsub(/^/, "# ")) if header_comment != ""
-    @data.map{|entry|entry.dup.tap{_1[0].gsub!("う゛", "ゔ")}}.sort_by{_1[0]}.each do |entry|
+    @data.map{|entry|entry.dup.tap{_1[0] = _1[0].gsub("う゛", "ゔ")}}.sort_by{_1[0]}.each do |entry|
       io.puts("#{entry[0]}\t#{entry[1]}\t固有名詞\t#{entry[2] || "エロゲ"}")
     end
   end
