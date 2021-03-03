@@ -110,6 +110,11 @@ module ErogeImeDic::DictionarySource
         ign 5825, "Dreams (ILLUSION)"
       end.tap{STDERR.puts _1.select{|e|e[1].include?("(")}.map{|a|a.join(" ")}}
     end
+
+    def musics
+      musics = restore_cache(File.join(CACHE_DIRECTORY, "musics")) { ErogeImeDic::ErogameScape.musics }
+      musics.map{[_1["furigana"].to_hiragana, _1["name"]]}
+    end
   end
 
   class Modification

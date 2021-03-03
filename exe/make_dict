@@ -5,6 +5,7 @@ require_relative "../lib/eroge_ime_dic"
 
 data = ErogeImeDic::DictionarySource.characters
 data.concat(ErogeImeDic::DictionarySource.brands)
+data.concat(ErogeImeDic::DictionarySource.musics)
 
 dic_builder = ErogeImeDic::DictionaryBuilder.new(data: data)
 File.open("eroge-dic-mozc", "w") do |f|
