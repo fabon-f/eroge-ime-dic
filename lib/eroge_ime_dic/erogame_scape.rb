@@ -19,9 +19,11 @@ module ErogeImeDic::ErogameScape
     # block.call(nil) -> first SQL
     # block.call(last_row) -> next SQL
     def fetch_all_paginate(interval: 3, &block)
+      # @type var last_row: nil|Hash
       last_row = nil
       result = []
       loop do
+        # @type break: nil
         data = query(yield last_row)
         break if data.size == 0
         last_row = data.last

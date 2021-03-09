@@ -10,7 +10,7 @@ class ErogeImeDic::DictionaryBuilder
 
   def generate_mozc(io)
     io.puts(header_comment.gsub(/^/, "# ")) if header_comment != ""
-    @data.map{|entry|entry.dup.tap{_1[0] = _1[0].gsub("う゛", "ゔ")}}.sort_by{_1[0]}.each do |entry|
+    @data.map{|entry| entry.dup.tap{|entry| entry[0] = entry[0].gsub("う゛", "ゔ")}}.sort_by{|entry| entry[0]}.each do |entry|
       io.puts("#{entry[0]}\t#{entry[1]}\t固有名詞\t#{entry[2] || "エロゲ"}")
     end
   end
@@ -26,6 +26,8 @@ class ErogeImeDic::DictionaryBuilder
       # 妥協して全角に置換する
       # バックスラッシュが含まれる場合セットで\ｼﾞｬｰﾝ/みたいな表現であることがほぼ100%確実なので、そちらも全角に置換する
       str.match?(/[\/;]/) ? str.gsub(/[\\\/;]/, { "\\" => "＼", "/" => "／", ";" => "；" }) : str
+    else
+      raise "非対応のエスケープ方式"
     end
   end
 
@@ -40,9 +42,12 @@ class ErogeImeDic::DictionaryBuilder
       hash[entry[0]] = [] unless hash.has_key?(entry[0])
       hash[entry[0]] << entry[1..2]
     end
-    hash.sort_by{_1}.each do |entry|
+    hash.sort_by{|k,v| k}.each do |entry|
       yomi = entry[0].gsub("ゔ", "う゛")
-      entries = entry[1].map{_1[1].nil? ? escape_skk(_1[0]) : "#{escape_skk(_1[0])};#{escape_skk(_1[1])}"}.uniq.join("/")
+      entries = entry[1].map do |word|
+        # wordは[単語,コメント]
+        word[1].nil? ? escape_skk(word[0]) : "#{escape_skk(word[0])};#{escape_skk(word[1])}"
+      end.uniq.join("/")
       io.puts("#{yomi} /#{entries}/")
     end
   end

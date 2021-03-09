@@ -1,0 +1,53 @@
+# Classes
+module ErogeImeDic
+  module Util
+    def to_katakana: -> untyped
+    def to_hiragana: -> untyped
+  end
+
+  module ErogameScape
+    def self.query: (String sql) -> Array[Hash[String,String]]
+    def self.fetch_all_paginate: (?interval: Integer) { (nil|Hash[String,String]) -> String } -> Array[untyped]
+    def self.characters: -> Array[untyped]
+    def self.brands: -> untyped
+    def self.musics: -> Array[untyped]
+  end
+
+  class DictionaryBuilder
+    attr_accessor data: Array[Array[untyped]]
+    attr_accessor header_comment: String
+    def initialize: (?data: Array[Array[untyped]], ?header_comment: String) -> void
+    def generate_mozc: (IO io) -> void
+
+    private
+    def escape_skk: (String str, ?escape: :concat) -> String
+
+    public
+    def generate_skk: (IO io) -> void
+  end
+
+  module DictionarySource
+    CACHE_DIRECTORY: String
+
+    def self.restore_cache: (String path) { -> Array[untyped] } -> ((Array[untyped] | Object)?)
+    def self.characters: -> Array[[String, String]]
+    def self.brands: -> Array[[String, String]]
+    def self.musics: -> Array[[String, String]]
+
+    class Modification
+      @deletions: Array[{id: String, name: String?}]
+      @additions: Array[[String, String]]
+      @splits: Array[{id: String, name: String?}]
+      @ignore_parenthesis: Array[{id: String, name: String?}]
+      @original_data: Array[untyped]
+      @transform: ^(untyped) -> [untyped, untyped]
+
+      def initialize: (Array[untyped] original_data) { (untyped) -> [untyped, untyped] } -> void
+      def add: (String furigana, String name) -> void
+      def del: (?Integer? id, ?String? name, **bot) -> void
+      def spl: (?Integer? id, ?String? name, **bot) -> void
+      def ign: (?Integer? id, ?String? name, **bot) -> void
+      def run: { (Modification) -> void } -> Array[[String, String]]
+    end
+  end
+end
