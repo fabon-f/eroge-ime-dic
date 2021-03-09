@@ -56,5 +56,15 @@ module ErogeImeDic::ErogameScape
         end
       end
     end
+
+    def games
+      fetch_all_paginate(interval: 5) do |last_row|
+        if last_row.nil?
+          "SELECT id,gamename,furigana,brandname AS brand_id,median,okazu,axis_of_soft_or_hard FROM gamelist ORDER BY id LIMIT 8000"
+        else
+          "SELECT id,gamename,furigana,brandname AS brand_id,median,okazu,axis_of_soft_or_hard FROM gamelist WHERE id > #{last_row["id"]} ORDER BY id LIMIT 8000"
+        end
+      end
+    end
   end
 end

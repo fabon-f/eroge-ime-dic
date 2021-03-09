@@ -115,6 +115,11 @@ module ErogeImeDic::DictionarySource
       musics = restore_cache(File.join(CACHE_DIRECTORY, "musics")) { ErogeImeDic::ErogameScape.musics }
       musics.map{[_1["furigana"].to_hiragana, _1["name"]]}
     end
+
+    def games
+      games = restore_cache(File.join(CACHE_DIRECTORY, "games")) { ErogeImeDic::ErogameScape.games }
+      games.map{[_1["furigana"].to_hiragana, _1["gamename"]]}
+    end
   end
 
   class Modification
