@@ -205,6 +205,7 @@ module ErogeImeDic::DictionarySource
     end
     def run(&block)
       instance_eval(&block)
+      # @type var match: ^(Hash, Array[Hash]) -> bool
       match = lambda do |hash, conditions|
         conditions.any? do |cond|
           cond.all?{|k,v|hash[k.to_s]==v}

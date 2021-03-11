@@ -29,7 +29,7 @@ module ErogeImeDic
   module DictionarySource
     CACHE_DIRECTORY: String
 
-    def self.restore_cache: (String path) { -> Array[untyped] } -> ((Array[untyped] | Object)?)
+    def self.restore_cache: (String path) { -> untyped } -> untyped
     def self.normalize_text: (String text) -> String
     def self.neologd_path: -> String
     def self.split_yomi: (Array[[String, String]]) -> Array[[String, String]]
@@ -38,18 +38,18 @@ module ErogeImeDic
     def self.musics: -> Array[[String, String]]
 
     class Modification
-      @deletions: Array[{id: String, name: String?}]
+      @deletions: Array[Hash[Symbol, String]]
       @additions: Array[[String, String]]
-      @splits: Array[{id: String, name: String?}]
-      @ignore_parenthesis: Array[{id: String, name: String?}]
-      @original_data: Array[untyped]
+      @splits: Array[Hash[Symbol, String]]
+      @ignore_parenthesis: Array[Hash[Symbol, String]]
+      @original_data: Array[Hash[String, String]]
       @transform: ^(untyped) -> [untyped, untyped]
 
-      def initialize: (Array[untyped] original_data) { (untyped) -> [untyped, untyped] } -> void
+      def initialize: (Array[Hash[String, String]] original_data) { (untyped) -> [untyped, untyped] } -> void
       def add: (String furigana, String name) -> void
-      def del: (?Integer? id, ?String? name, **bot) -> void
-      def spl: (?Integer? id, ?String? name, **bot) -> void
-      def ign: (?Integer? id, ?String? name, **bot) -> void
+      def del: (?Integer? id, ?String? name, **String) -> void
+      def spl: (?Integer? id, ?String? name, **String) -> void
+      def ign: (?Integer? id, ?String? name, **String) -> void
       def run: { (Modification) -> void } -> Array[[String, String]]
     end
   end
