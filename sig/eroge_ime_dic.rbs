@@ -30,6 +30,9 @@ module ErogeImeDic
     CACHE_DIRECTORY: String
 
     def self.restore_cache: (String path) { -> Array[untyped] } -> ((Array[untyped] | Object)?)
+    def self.normalize_text: (String text) -> String
+    def self.neologd_path: -> String
+    def self.split_yomi: (Array[[String, String]]) -> Array[[String, String]]
     def self.characters: -> Array[[String, String]]
     def self.brands: -> Array[[String, String]]
     def self.musics: -> Array[[String, String]]

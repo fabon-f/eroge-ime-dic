@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+require "natto"
+
 module ErogeImeDic::DictionarySource
   CACHE_DIRECTORY = File.expand_path("../../cache", __dir__)
   class << self
@@ -13,6 +16,41 @@ module ErogeImeDic::DictionarySource
         Marshal.dump(obj, f)
       end
       obj
+    end
+
+    def normalize_text(text)
+      text.gsub(/[:blank:]+/, " ")
+    end
+
+    def neologd_path
+      nm = Natto::MeCab.new
+      neologd_filepath = nm.dicts.map(&:filepath).detect{|p| p.include?("mecab-ipadic-neologd")}
+      File.dirname(neologd_filepath)
+    end
+
+    def split_yomi(entries)
+      data = []
+      space_regex = /\s+(?=[^A-Za-z0-9&])|(?<=[^A-Za-z0-9&])\s+/
+      nm = Natto::MeCab.new(nbest: 5, output_format_type: "yomi", dicdir: neologd_path)
+
+      entries.filter{|e| e[1].match?(space_regex) }.each do |e|
+        yomi = e[0]
+        parts = e[1].split(space_regex).map{|s| s.gsub(/^[-－–—〜～]|[-－–—〜～]$/, "") }.reject(&:empty?)
+        next unless parts.size == 2
+
+        nm.parse(parts[0]).to_s.split("\n").map(&:to_hiragana).uniq.each do |yomi_candidate|
+          next unless yomi.start_with?(yomi_candidate)
+          data.push([yomi_candidate, parts[0]])
+          data.push([yomi.delete_prefix(yomi_candidate), parts[1]])
+        end
+
+        nm.parse(parts[1]).to_s.split("\n").map(&:to_hiragana).uniq.each do |yomi_candidate|
+          next unless yomi.end_with?(yomi_candidate)
+          data.push([yomi_candidate, parts[1]])
+          data.push([yomi.delete_suffix(yomi_candidate), parts[0]])
+        end
+      end
+      data.reject{ |r| r[0].empty? }
     end
 
     def characters
@@ -118,7 +156,8 @@ module ErogeImeDic::DictionarySource
 
     def games
       games = restore_cache(File.join(CACHE_DIRECTORY, "games")) { ErogeImeDic::ErogameScape.games }
-      games.map{[_1["furigana"].to_hiragana, _1["gamename"]]}
+      game_entries = games.map{[_1["furigana"].to_hiragana, normalize_text(_1["gamename"])]}
+      game_entries + split_yomi(game_entries)
     end
   end
 
