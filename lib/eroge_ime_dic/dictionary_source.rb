@@ -55,14 +55,22 @@ module ErogeImeDic::DictionarySource
 
     def characters
       characters = restore_cache(File.join(CACHE_DIRECTORY, "characters")) { ErogeImeDic::ErogameScape.characters }
-      characters.map{[_1["furigana"].gsub(/\s+/, "").to_hiragana, _1["name"].gsub(/\s+/, "")]}
+      characters.map do |character|
+        character_yomi = character["furigana"].gsub(/\s+/, "").to_hiragana
+        character_name = character["name"].gsub(/\s+/, "")
+        [character_yomi, character_name]
+      end
     end
 
     def brands
       brands = restore_cache(File.join(CACHE_DIRECTORY, "brands")) { ErogeImeDic::ErogameScape.brands }
-        .sort_by{_1["id"].to_i}
-      m = Modification.new(brands) {[_1["furigana"].to_hiragana, _1["name"]]}
+        .sort_by{|b| b["id"].to_i}
+      m = Modification.new(brands) do |b|
+        brand_yomi = b["furigana"].to_hiragana
+        [brand_yomi, b["name"]]
+      end
       m.run do
+        # @type self: Modification
         spl 1,"âge(age)"
         ign 46, "ILLUSION(Dreams)"
         spl 99, "Kur-Mar-Ter(クルマレテル)"
@@ -146,17 +154,24 @@ module ErogeImeDic::DictionarySource
         add "あにむまざーあんどわいふ", "ANIM Mother&Wife"
         spl 5809, "CFK(シーエフケー)"
         ign 5825, "Dreams (ILLUSION)"
-      end.tap{STDERR.puts _1.select{|e|e[1].include?("(")}.map{|a|a.join(" ")}}
+      end.tap{|brands| STDERR.puts brands.select{|e|e[1].include?("(")}.map{|a|a.join(" ")}}
     end
 
     def musics
       musics = restore_cache(File.join(CACHE_DIRECTORY, "musics")) { ErogeImeDic::ErogameScape.musics }
-      musics.map{[_1["furigana"].to_hiragana, _1["name"]]}
+      musics.map do |m|
+        music_yomi = m["furigana"].to_hiragana
+        [music_yomi, m["name"]]
+      end
     end
 
     def games
       games = restore_cache(File.join(CACHE_DIRECTORY, "games")) { ErogeImeDic::ErogameScape.games }
-      game_entries = games.map{[_1["furigana"].to_hiragana, normalize_text(_1["gamename"])]}
+      game_entries = games.map do |g|
+        game_yomi = g["furigana"].to_hiragana
+        game_name = normalize_text(g["gamename"])
+        [game_yomi, game_name]
+      end
       game_entries + split_yomi(game_entries)
     end
   end
@@ -198,10 +213,12 @@ module ErogeImeDic::DictionarySource
       splits, remaining = @original_data.partition{|data_row|match.(data_row, @splits)}
       splited = splits.map do |elem|
         entry = @transform.(elem)
-        entry[1].split(/[()]/).reject(&:empty?).map{[entry[0],_1]}
+        entry[1].split(/[()]/).reject(&:empty?).map{ |e| [entry[0], e] }
       end.flatten(1)
       ign_pars, remaining = remaining.partition{|data_row|match.(data_row, @ignore_parenthesis)}
-      ignored = ign_pars.map{|data_row|@transform.(data_row).tap{_1[1] = _1[1].gsub(/\(.+\)$/, "")}}
+      ignored = ign_pars.map do |data_row|
+        @transform.(data_row).tap{ |r| r[1] = r[1].gsub(/\(.+\)$/, "")}
+      end
       remaining.reject{|data_row|match.(data_row, @deletions)}.map(&@transform) + @additions + splited + ignored
     end
   end
