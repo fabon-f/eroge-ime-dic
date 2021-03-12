@@ -1,0 +1,7 @@
+#!/bin/sh
+mkdir -p dist
+zip -r dist/atok.zip dic/atok -x "*.DS_Store" "*__MACOSX*"
+zip -r dist/google_ime.zip dic/google_ime -x "*.DS_Store" "*__MACOSX*"
+zip -r dist/kotoeri.zip dic/kotoeri -x "*.DS_Store" "*__MACOSX*"
+zip -r dist/msime.zip dic/msime -x "*.DS_Store" "*__MACOSX*"
+cp dic/SKK-JISYO.eroge dist/
