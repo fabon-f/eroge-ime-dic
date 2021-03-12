@@ -19,7 +19,7 @@ module ErogeImeDic::DictionarySource
     end
 
     def normalize_text(text)
-      text.gsub(/[:blank:]+/, " ")
+      text.gsub(/[[:blank:]]+/, " ")
     end
 
     def neologd_path
@@ -177,7 +177,7 @@ module ErogeImeDic::DictionarySource
           include_doujin || !is_doujin
         end
       game_entries = games.map do |g|
-        game_yomi = g["furigana"].to_hiragana
+        game_yomi = g["furigana"].to_hiragana.gsub(/\s+/, "")
         game_name = normalize_text(g["gamename"])
         [game_yomi, game_name]
       end
