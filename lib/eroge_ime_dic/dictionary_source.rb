@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "natto"
+require "yaml"
 
 module ErogeImeDic::DictionarySource
   CACHE_DIRECTORY = File.expand_path("../../cache", __dir__)
@@ -55,11 +56,19 @@ module ErogeImeDic::DictionarySource
 
     def characters
       characters = restore_cache(File.join(CACHE_DIRECTORY, "characters")) { ErogeImeDic::ErogameScape.characters }
-      characters.map do |character|
+      character_data = characters.map do |character|
         character_yomi = character["furigana"].gsub(/\s+/, "").to_hiragana
         character_name = character["name"].gsub(/\s+/, "")
         [character_yomi, character_name]
       end
+
+      YAML.load_file(File.expand_path("../../data/eroge-character-extra.yml", __dir__)).each do |brand, games|
+        games.each do |game, characters|
+          characters.each { |character| character_data << character.map{|t| t.gsub(" ", "") } }
+        end
+      end
+
+      character_data
     end
 
     def brands
