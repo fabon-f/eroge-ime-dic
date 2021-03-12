@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "nkf"
+
 class ErogeImeDic::DictionaryBuilder
   # dataは[よみ(ひらがな), 単語, コメント(任意)]の配列
   attr_accessor :data, :header_comment
@@ -31,6 +33,28 @@ class ErogeImeDic::DictionaryBuilder
       @data.each do |word|
         f.puts("#{word[0].gsub("う゛", "ゔ")}\t#{word[1]}\t固有名詞\t#{word[2] || "エロゲ"}")
       end
+    end
+  end
+
+  def generate_atok(path)
+    File.open(path, "w:UTF-16") do |f|
+      f.puts("!!ATOK_TANGO_TEXT_HEADER_1")
+      @data.each do |word|
+        f.puts("#{word[0].gsub("う゛", "ゔ")}\t#{word[1]}\t固有一般")
+      end
+    end
+  end
+
+  def generate_msime(path)
+    File.open(path, "wb:UTF-16LE") do |f|
+      str = +""
+      str << "!Microsoft IME Dictionary Tool\n"
+      str << "!Format:WORDLIST\n"
+      str << "\n"
+      @data.each do |word|
+        str << "#{word[0].gsub("う゛", "ゔ")}\t#{word[1]}\t固有名詞\t#{word[2] || "エロゲ"}\n"
+      end
+      f.write("\uFEFF" + NKF.nkf("-w -Lw", str))
     end
   end
 

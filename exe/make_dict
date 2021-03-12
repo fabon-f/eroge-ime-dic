@@ -12,20 +12,51 @@ game_data_without_nuki = ErogeImeDic::DictionarySource.games(include_nuki: false
 game_data_without_doujin = ErogeImeDic::DictionarySource.games(include_doujin: false)
 
 DIC_DIRECTORY = File.expand_path("../dic", __dir__)
-FileUtils.mkdir_p(DIC_DIRECTORY)
+MOZC_DIR = File.join(DIC_DIRECTORY, "google_ime")
+ATOK_DIR = File.join(DIC_DIRECTORY, "atok")
+MSIME_DIR = File.join(DIC_DIRECTORY, "msime")
+FileUtils.mkdir_p(MOZC_DIR)
+FileUtils.mkdir_p(ATOK_DIR)
+FileUtils.mkdir_p(MSIME_DIR)
 
-def output_mozc_dic(data, file)
-  b = ErogeImeDic::DictionaryBuilder.new(data: data)
-  b.generate_mozc(file)
+ErogeImeDic::DictionaryBuilder.new(data: chara_data).tap do |b|
+  b.generate_mozc(File.join(MOZC_DIR, "eroge-chara-dic.txt"))
+  b.generate_atok(File.join(ATOK_DIR, "eroge-chara-dic.txt"))
+  b.generate_msime(File.join(MSIME_DIR, "eroge-chara-dic.txt"))
 end
 
-output_mozc_dic(chara_data, File.join(DIC_DIRECTORY, "eroge-chara-dic-mozc"))
-output_mozc_dic(brand_data, File.join(DIC_DIRECTORY, "eroge-brand-dic-mozc"))
-output_mozc_dic(music_data, File.join(DIC_DIRECTORY, "eroge-music-dic-mozc"))
-output_mozc_dic(game_data, File.join(DIC_DIRECTORY, "eroge-game-dic-mozc"))
-output_mozc_dic(game_data_without_nuki, File.join(DIC_DIRECTORY, "eroge-notnukige-dic-mozc"))
-output_mozc_dic(game_data_without_doujin, File.join(DIC_DIRECTORY, "eroge-corp-game-dic-mozc"))
+ErogeImeDic::DictionaryBuilder.new(data: brand_data).tap do |b|
+  b.generate_mozc(File.join(MOZC_DIR, "eroge-brand-dic.txt"))
+  b.generate_atok(File.join(ATOK_DIR, "eroge-brand-dic.txt"))
+  b.generate_msime(File.join(MSIME_DIR, "eroge-brand-dic.txt"))
+end
+
+ErogeImeDic::DictionaryBuilder.new(data: music_data).tap do |b|
+  b.generate_mozc(File.join(MOZC_DIR, "eroge-music-dic.txt"))
+  b.generate_atok(File.join(ATOK_DIR, "eroge-music-dic.txt"))
+  b.generate_msime(File.join(MSIME_DIR, "eroge-music-dic.txt"))
+end
+
+ErogeImeDic::DictionaryBuilder.new(data: game_data).tap do |b|
+  b.generate_mozc(File.join(MOZC_DIR, "eroge-game-dic.txt"))
+  b.generate_atok(File.join(ATOK_DIR, "eroge-game-dic.txt"))
+  b.generate_msime(File.join(MSIME_DIR, "eroge-game-dic.txt"))
+end
+
+ErogeImeDic::DictionaryBuilder.new(data: game_data_without_nuki).tap do |b|
+  b.generate_mozc(File.join(MOZC_DIR, "eroge-notnukige-dic.txt"))
+  b.generate_atok(File.join(ATOK_DIR, "eroge-notnukige-dic.txt"))
+  b.generate_msime(File.join(MSIME_DIR, "eroge-notnukige-dic.txt"))
+end
+
+ErogeImeDic::DictionaryBuilder.new(data: game_data_without_doujin).tap do |b|
+  b.generate_mozc(File.join(MOZC_DIR, "eroge-corp-game-dic.txt"))
+  b.generate_atok(File.join(ATOK_DIR, "eroge-corp-game-dic.txt"))
+  b.generate_msime(File.join(MSIME_DIR, "eroge-corp-game-dic.txt"))
+end
 
 dic_builder = ErogeImeDic::DictionaryBuilder.new(data: chara_data + brand_data + music_data + game_data)
-dic_builder.generate_mozc(File.join(DIC_DIRECTORY, "eroge-dic-mozc"))
+dic_builder.generate_mozc(File.join(MOZC_DIR, "eroge-dic.txt"))
+dic_builder.generate_atok(File.join(ATOK_DIR, "eroge-dic.txt"))
+dic_builder.generate_msime(File.join(MSIME_DIR, "eroge-dic.txt"))
 dic_builder.generate_skk(File.join(DIC_DIRECTORY, "SKK-JISYO.eroge"))
