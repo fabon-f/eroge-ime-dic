@@ -6,20 +6,29 @@ class ErogeImeDic::DictionaryBuilder
   def initialize(data: [], header_comment: "")
     @data = data
     @header_comment = header_comment
+    sort!
   end
 
-  def generate_mozc(io)
+  def sort!
     hash = {}
     @data.each do |entry|
       hash[entry[0]] = [] unless hash.has_key?(entry[0])
       hash[entry[0]] << entry[1..2]
     end
 
-    io.puts(header_comment.gsub(/^/, "# ")) if header_comment != ""
+    d = []
     hash.sort_by{|k,v| k}.each do |yomi, words|
       words.uniq.each do |word|
-        io.puts("#{yomi.gsub("う゛", "ゔ")}\t#{word[0]}\t固有名詞\t#{word[1] || "エロゲ"}")
+        d.push([yomi, word[0], word[1]])
       end
+    end
+    @data = d
+  end
+
+  def generate_mozc(io)
+    io.puts(header_comment.gsub(/^/, "# ")) if header_comment != ""
+    @data.each do |word|
+      io.puts("#{word[0].gsub("う゛", "ゔ")}\t#{word[1]}\t固有名詞\t#{word[2] || "エロゲ"}")
     end
   end
 
