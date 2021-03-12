@@ -9,8 +9,9 @@ module ErogeImeDic
     def self.query: (String sql) -> Array[Hash[String,String]]
     def self.fetch_all_paginate: (?interval: Integer) { (nil|Hash[String,String]) -> String } -> Array[untyped]
     def self.characters: -> Array[untyped]
-    def self.brands: -> untyped
+    def self.brands: -> Array[untyped]
     def self.musics: -> Array[untyped]
+    def self.games: -> Array[untyped]
   end
 
   class DictionaryBuilder
@@ -36,6 +37,7 @@ module ErogeImeDic
     def self.characters: -> Array[[String, String]]
     def self.brands: -> Array[[String, String]]
     def self.musics: -> Array[[String, String]]
+    def self.games: (?include_nuki: bool, ?include_doujin: bool) -> Array[[String, String]]
 
     class Modification
       @deletions: Array[Hash[Symbol, String]]

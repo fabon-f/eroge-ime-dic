@@ -64,6 +64,7 @@ module ErogeImeDic::DictionarySource
 
     def brands
       brands = restore_cache(File.join(CACHE_DIRECTORY, "brands")) { ErogeImeDic::ErogameScape.brands }
+        .filter{|b| b["kind"] == "CORPORATION" }
         .sort_by{|b| b["id"].to_i}
       m = Modification.new(brands) do |b|
         brand_yomi = b["furigana"].to_hiragana
@@ -165,8 +166,16 @@ module ErogeImeDic::DictionarySource
       end
     end
 
-    def games
+    def games(include_nuki: true, include_doujin: true)
+      brands = restore_cache(File.join(CACHE_DIRECTORY, "brands")) { ErogeImeDic::ErogameScape.brands }
+        .reduce({}) {|h,g| h[g["id"]] = g; h }
       games = restore_cache(File.join(CACHE_DIRECTORY, "games")) { ErogeImeDic::ErogameScape.games }
+        .filter{|game| include_nuki || game["okazu"] == "f" }
+        .filter do |game|
+          brand = brands[game["brand_id"]]
+          is_doujin = brand != nil ? brand["kind"] == "CIRCLE" : true
+          include_doujin || !is_doujin
+        end
       game_entries = games.map do |g|
         game_yomi = g["furigana"].to_hiragana
         game_name = normalize_text(g["gamename"])
