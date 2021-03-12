@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "fileutils"
 require_relative "../lib/eroge_ime_dic"
 
 chara_data = ErogeImeDic::DictionarySource.characters
@@ -10,6 +11,9 @@ game_data = ErogeImeDic::DictionarySource.games
 game_data_without_nuki = ErogeImeDic::DictionarySource.games(include_nuki: false)
 game_data_without_doujin = ErogeImeDic::DictionarySource.games(include_doujin: false)
 
+DIC_DIRECTORY = File.expand_path("../dic", __dir__)
+FileUtils.mkdir_p(DIC_DIRECTORY)
+
 def output_mozc_dic(data, file)
   b = ErogeImeDic::DictionaryBuilder.new(data: data)
   File.open(file, "w") do |f|
@@ -17,17 +21,17 @@ def output_mozc_dic(data, file)
   end
 end
 
-output_mozc_dic(chara_data, "eroge-chara-dic-mozc")
-output_mozc_dic(brand_data, "eroge-brand-dic-mozc")
-output_mozc_dic(music_data, "eroge-music-dic-mozc")
-output_mozc_dic(game_data, "eroge-game-dic-mozc")
-output_mozc_dic(game_data_without_nuki, "eroge-notnukige-dic-mozc")
-output_mozc_dic(game_data_without_doujin, "eroge-corp-game-dic-mozc")
+output_mozc_dic(chara_data, File.join(DIC_DIRECTORY, "eroge-chara-dic-mozc"))
+output_mozc_dic(brand_data, File.join(DIC_DIRECTORY, "eroge-brand-dic-mozc"))
+output_mozc_dic(music_data, File.join(DIC_DIRECTORY, "eroge-music-dic-mozc"))
+output_mozc_dic(game_data, File.join(DIC_DIRECTORY, "eroge-game-dic-mozc"))
+output_mozc_dic(game_data_without_nuki, File.join(DIC_DIRECTORY, "eroge-notnukige-dic-mozc"))
+output_mozc_dic(game_data_without_doujin, File.join(DIC_DIRECTORY, "eroge-corp-game-dic-mozc"))
 
 dic_builder = ErogeImeDic::DictionaryBuilder.new(data: chara_data + brand_data + music_data + game_data)
-File.open("eroge-dic-mozc", "w") do |f|
+File.open(File.join(DIC_DIRECTORY, "eroge-dic-mozc"), "w") do |f|
   dic_builder.generate_mozc(f)
 end
-File.open("SKK-JISYO.eroge", "w") do |f|
+File.open(File.join(DIC_DIRECTORY, "SKK-JISYO.eroge"), "w") do |f|
   dic_builder.generate_skk(f)
 end

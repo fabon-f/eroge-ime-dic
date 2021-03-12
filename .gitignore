@@ -4,3 +4,4 @@
 /Gemfile.lock
 /cache/*
 !/cache/.keep
+/dic
