@@ -50,9 +50,9 @@ module ErogeImeDic::ErogameScape
     def musics
       fetch_all_paginate(interval: 5) do |last_row|
         if last_row.nil?
-          "SELECT id,name,furigana FROM musiclist WHERE vocal = 't' ORDER BY id ASC LIMIT 8000"
+          "SELECT id,name,furigana FROM musiclist ORDER BY id ASC LIMIT 8000"
         else
-          "SELECT id,name,furigana FROM musiclist WHERE vocal = 't' AND id > #{last_row["id"]} ORDER BY id ASC LIMIT 8000"
+          "SELECT id,name,furigana FROM musiclist WHERE id > #{last_row["id"]} ORDER BY id ASC LIMIT 8000"
         end
       end
     end
