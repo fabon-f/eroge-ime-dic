@@ -16,9 +16,7 @@ FileUtils.mkdir_p(DIC_DIRECTORY)
 
 def output_mozc_dic(data, file)
   b = ErogeImeDic::DictionaryBuilder.new(data: data)
-  File.open(file, "w") do |f|
-    b.generate_mozc(f)
-  end
+  b.generate_mozc(file)
 end
 
 output_mozc_dic(chara_data, File.join(DIC_DIRECTORY, "eroge-chara-dic-mozc"))
@@ -29,9 +27,5 @@ output_mozc_dic(game_data_without_nuki, File.join(DIC_DIRECTORY, "eroge-notnukig
 output_mozc_dic(game_data_without_doujin, File.join(DIC_DIRECTORY, "eroge-corp-game-dic-mozc"))
 
 dic_builder = ErogeImeDic::DictionaryBuilder.new(data: chara_data + brand_data + music_data + game_data)
-File.open(File.join(DIC_DIRECTORY, "eroge-dic-mozc"), "w") do |f|
-  dic_builder.generate_mozc(f)
-end
-File.open(File.join(DIC_DIRECTORY, "SKK-JISYO.eroge"), "w") do |f|
-  dic_builder.generate_skk(f)
-end
+dic_builder.generate_mozc(File.join(DIC_DIRECTORY, "eroge-dic-mozc"))
+dic_builder.generate_skk(File.join(DIC_DIRECTORY, "SKK-JISYO.eroge"))

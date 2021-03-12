@@ -25,10 +25,12 @@ class ErogeImeDic::DictionaryBuilder
     @data = d
   end
 
-  def generate_mozc(io)
-    io.puts(header_comment.gsub(/^/, "# ")) if header_comment != ""
-    @data.each do |word|
-      io.puts("#{word[0].gsub("う゛", "ゔ")}\t#{word[1]}\t固有名詞\t#{word[2] || "エロゲ"}")
+  def generate_mozc(path)
+    File.open(path, "w") do |f|
+      f.puts(header_comment.gsub(/^/, "# ")) if header_comment != ""
+      @data.each do |word|
+        f.puts("#{word[0].gsub("う゛", "ゔ")}\t#{word[1]}\t固有名詞\t#{word[2] || "エロゲ"}")
+      end
     end
   end
 
@@ -48,24 +50,26 @@ class ErogeImeDic::DictionaryBuilder
     end
   end
 
-  def generate_skk(io)
-    io.puts(";;; -*- coding: utf-8 -*-")
-    io.puts(header_comment.gsub(/^/, ";; ")) if header_comment != ""
-    io.puts(";; okuri-ari entries.")
-    io.puts(";; okuri-nasi entries.")
+  def generate_skk(path)
+    File.open(path, "w") do |f|
+      f.puts(";;; -*- coding: utf-8 -*-")
+      f.puts(header_comment.gsub(/^/, ";; ")) if header_comment != ""
+      f.puts(";; okuri-ari entries.")
+      f.puts(";; okuri-nasi entries.")
 
-    hash = {}
-    @data.each do |entry|
-      hash[entry[0]] = [] unless hash.has_key?(entry[0])
-      hash[entry[0]] << entry[1..2]
-    end
-    hash.sort_by{|k,v| k}.each do |entry|
-      yomi = entry[0].gsub("ゔ", "う゛")
-      entries = entry[1].map do |word|
-        # wordは[単語,コメント]
-        word[1].nil? ? escape_skk(word[0]) : "#{escape_skk(word[0])};#{escape_skk(word[1])}"
-      end.uniq.join("/")
-      io.puts("#{yomi} /#{entries}/")
+      hash = {}
+      @data.each do |entry|
+        hash[entry[0]] = [] unless hash.has_key?(entry[0])
+        hash[entry[0]] << entry[1..2]
+      end
+      hash.sort_by{|k,v| k}.each do |entry|
+        yomi = entry[0].gsub("ゔ", "う゛")
+        entries = entry[1].map do |word|
+          # wordは[単語,コメント]
+          word[1].nil? ? escape_skk(word[0]) : "#{escape_skk(word[0])};#{escape_skk(word[1])}"
+        end.uniq.join("/")
+        f.puts("#{yomi} /#{entries}/")
+      end
     end
   end
 end

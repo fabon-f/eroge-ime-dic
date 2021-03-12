@@ -19,13 +19,13 @@ module ErogeImeDic
     attr_accessor header_comment: String
     def initialize: (?data: Array[Array[untyped]], ?header_comment: String) -> void
     def sort!: -> void
-    def generate_mozc: (IO io) -> void
+    def generate_mozc: (String path) -> void
 
     private
     def escape_skk: (String str, ?escape: :concat) -> String
 
     public
-    def generate_skk: (IO io) -> void
+    def generate_skk: (String path) -> void
   end
 
   module DictionarySource
