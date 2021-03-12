@@ -22,6 +22,7 @@ module ErogeImeDic
     def generate_mozc: (String path) -> void
     def generate_atok: (String path) -> void
     def generate_msime: (String path) -> void
+    def generate_kotoeri: (String path) -> void
 
     private
     def escape_skk: (String str, ?escape: :concat) -> String

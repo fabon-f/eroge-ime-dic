@@ -58,6 +58,22 @@ class ErogeImeDic::DictionaryBuilder
     end
   end
 
+  def generate_kotoeri(path)
+    File.open(path, "w") do |f|
+      f.puts <<-PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+PLIST
+
+      @data.each do |word|
+        f.puts("<dict><key>phrase</key><string>#{word[1].encode(xml: :text)}</string><key>shortcut</key><string>#{word[0].gsub("う゛", "ゔ").encode(xml: :text)}</string></dict>")
+      end
+      f.puts("</array>\n</plist>")
+    end
+  end
+
   private def escape_skk(str, escape: :concat)
     if escape == :concat
       escaped_str = str.gsub(/[\\\/;]/, { "\\" => "\\\\", "/" => "\\057", ";" => "\\073" })
