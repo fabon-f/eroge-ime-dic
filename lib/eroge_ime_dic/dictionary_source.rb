@@ -57,14 +57,14 @@ module ErogeImeDic::DictionarySource
     def characters
       characters = restore_cache(File.join(CACHE_DIRECTORY, "characters")) { ErogeImeDic::ErogameScape.characters }
       character_data = characters.map do |character|
-        character_yomi = character["furigana"].gsub(/\s+/, "").to_hiragana
-        character_name = character["name"].gsub(/\s+/, "")
+        character_yomi = character["furigana"].gsub(/[[:blank:]]+/, "").to_hiragana
+        character_name = character["name"].gsub(/[[:blank:]]+/, "")
         [character_yomi, character_name]
       end
 
       YAML.load_file(File.expand_path("../../data/eroge-character-extra.yml", __dir__)).each do |brand, games|
         games.each do |game, characters|
-          characters.each { |character| character_data << character.map{|t| t.gsub(" ", "") } }
+          characters.each { |character| character_data << character.map{|t| t.gsub(/[[:blank:]]+/, "") } }
         end
       end
 
@@ -170,7 +170,7 @@ module ErogeImeDic::DictionarySource
     def musics
       musics = restore_cache(File.join(CACHE_DIRECTORY, "musics")) { ErogeImeDic::ErogameScape.musics }
       musics.map do |m|
-        music_yomi = m["furigana"].to_hiragana
+        music_yomi = m["furigana"].to_hiragana.gsub(/[[:blank:]・、。!?！？]+/, "")
         [music_yomi, m["name"]]
       end
     end
@@ -186,7 +186,7 @@ module ErogeImeDic::DictionarySource
           include_doujin || !is_doujin
         end
       game_entries = games.map do |g|
-        game_yomi = g["furigana"].to_hiragana.gsub(/\s+/, "")
+        game_yomi = g["furigana"].to_hiragana.gsub(/[[:blank:]・、。!?！？]+/, "")
         game_name = normalize_text(g["gamename"])
         [game_yomi, game_name]
       end
