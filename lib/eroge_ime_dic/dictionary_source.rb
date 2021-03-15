@@ -23,6 +23,10 @@ module ErogeImeDic::DictionarySource
       text.gsub(/[[:blank:]]+/, " ")
     end
 
+    def normalize_yomi(text)
+      text.gsub(/[[:blank:]・、。!?！？「」『』×<>]+/, "")
+    end
+
     def neologd_path
       nm = Natto::MeCab.new
       neologd_filepath = nm.dicts.map(&:filepath).detect{|p| p.include?("mecab-ipadic-neologd")}
@@ -170,7 +174,7 @@ module ErogeImeDic::DictionarySource
     def musics
       musics = restore_cache(File.join(CACHE_DIRECTORY, "musics")) { ErogeImeDic::ErogameScape.musics }
       musics.map do |m|
-        music_yomi = m["furigana"].to_hiragana.gsub(/[[:blank:]・、。!?！？]+/, "")
+        music_yomi = normalize_yomi(m["furigana"].to_hiragana)
         [music_yomi, m["name"]]
       end
     end
@@ -186,7 +190,7 @@ module ErogeImeDic::DictionarySource
           include_doujin || !is_doujin
         end
       game_entries = games.map do |g|
-        game_yomi = g["furigana"].to_hiragana.gsub(/[[:blank:]・、。!?！？]+/, "")
+        game_yomi = normalize_yomi(g["furigana"].to_hiragana)
         game_name = normalize_text(g["gamename"])
         [game_yomi, game_name]
       end

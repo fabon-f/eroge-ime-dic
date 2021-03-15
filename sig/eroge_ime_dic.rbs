@@ -36,6 +36,7 @@ module ErogeImeDic
 
     def self.restore_cache: (String path) { -> untyped } -> untyped
     def self.normalize_text: (String text) -> String
+    def self.normalize_yomi: (String text) -> String
     def self.neologd_path: -> String
     def self.split_yomi: (Array[[String, String]]) -> Array[[String, String]]
     def self.characters: -> Array[[String, String]]
