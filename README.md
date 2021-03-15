@@ -56,6 +56,7 @@
 ## ビルドに必要なもの
 
 * MeCab
+* mecab-ipadic-NEologd
 
 ## ビルド方法
 
