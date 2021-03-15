@@ -1,4 +1,5 @@
-/bin
+/bin/*
+!/bin/console
 /.bundle
 /vendor/bundle
 /Gemfile.lock

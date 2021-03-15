@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require_relative "../lib/eroge_ime_dic"
+
+using ErogeImeDic::Util
+
+require "irb"
+IRB.start(__FILE__)
