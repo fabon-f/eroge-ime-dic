@@ -43,13 +43,13 @@ module ErogeImeDic::DictionarySource
         parts = e[1].split(space_regex).map{|s| s.gsub(/^[-－–—〜～]|[-－–—〜～]$/, "") }.reject(&:empty?)
         next unless parts.size == 2
 
-        nm.parse(parts[0]).to_s.split("\n").map(&:to_hiragana).uniq.each do |yomi_candidate|
+        nm.parse(parts[0]).to_s.split("\n").map{|y| y.to_hiragana.gsub(/[^\p{Hiragana}ー゛]/, "") }.uniq.each do |yomi_candidate|
           next unless yomi.start_with?(yomi_candidate)
           data.push([yomi_candidate, parts[0]])
           data.push([yomi.delete_prefix(yomi_candidate), parts[1]])
         end
 
-        nm.parse(parts[1]).to_s.split("\n").map(&:to_hiragana).uniq.each do |yomi_candidate|
+        nm.parse(parts[1]).to_s.split("\n").map{|y| y.to_hiragana.gsub(/[^\p{Hiragana}ー゛]/, "") }.uniq.each do |yomi_candidate|
           next unless yomi.end_with?(yomi_candidate)
           data.push([yomi_candidate, parts[1]])
           data.push([yomi.delete_suffix(yomi_candidate), parts[0]])
