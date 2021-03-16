@@ -8,6 +8,10 @@ class ErogeImeDic::DictionaryBuilder
   def initialize(data: [], header_comment: "")
     @data = data
     @header_comment = header_comment
+
+    @data, invalid_data =  @data.partition{|r| r[0].is_a?(String) && r[1].is_a?(String) }
+    puts "Invalid data:\n#{invalid_data.map(&:inspect).join("\n")}\n" if invalid_data.size > 0
+
     sort!
   end
 
