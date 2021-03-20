@@ -24,7 +24,7 @@ module ErogeImeDic::DictionarySource
     end
 
     def normalize_yomi(text)
-      text.gsub(/[[:blank:]・、。!?！？「」『』×<>]+/, "")
+      text.gsub(/[[:blank:]・、。!?！？「」『』×<>〜～-]+/, "")
     end
 
     def neologd_path
@@ -61,7 +61,7 @@ module ErogeImeDic::DictionarySource
     def characters
       characters = restore_cache(File.join(CACHE_DIRECTORY, "characters")) { ErogeImeDic::ErogameScape.characters }
       character_data = characters.map do |character|
-        character_yomi = character["furigana"].gsub(/[[:blank:]]+/, "").to_hiragana
+        character_yomi = normalize_yomi(character["furigana"].gsub(/[[:blank:]]+/, "").to_hiragana)
         character_name = character["name"].gsub(/[[:blank:]]+/, "")
         [character_yomi, character_name]
       end
@@ -173,9 +173,16 @@ module ErogeImeDic::DictionarySource
 
     def musics
       musics = restore_cache(File.join(CACHE_DIRECTORY, "musics")) { ErogeImeDic::ErogameScape.musics }
-      musics.map do |m|
+      m = Modification.new(musics) do |m|
         music_yomi = normalize_yomi(m["furigana"].to_hiragana)
         [music_yomi, m["name"]]
+      end
+      m.run do
+        # @type self: Modification
+        del 3905, "ぶるま～ず☆"
+        add "ぶるまーず", "ぶるま～ず☆"
+        del 3921, "ぶるま～ずへようこそ☆"
+        add "ぶるまーずへようこそ", "ぶるま～ずへようこそ☆"
       end
     end
 
