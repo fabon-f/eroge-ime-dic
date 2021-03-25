@@ -22,9 +22,9 @@ module ErogeImeDic::ErogameScape
       # @type var last_row: nil|Hash
       last_row = nil
       result = []
-      loop do
+      0.step do |i|
         # @type break: nil
-        data = query(yield last_row)
+        data = query(yield last_row,i)
         break if data.size == 0
         last_row = data.last
         result.concat(data)
@@ -58,13 +58,13 @@ module ErogeImeDic::ErogameScape
     end
 
     def games
-      fetch_all_paginate(interval: 5) do |last_row|
-        if last_row.nil?
-          "SELECT id,gamename,furigana,brandname AS brand_id,median,okazu,axis_of_soft_or_hard FROM gamelist ORDER BY id LIMIT 8000"
-        else
-          "SELECT id,gamename,furigana,brandname AS brand_id,median,okazu,axis_of_soft_or_hard FROM gamelist WHERE id > #{last_row["id"]} ORDER BY id LIMIT 8000"
-        end
+      expected_size = query("SELECT COUNT(*) from gamelist").first["count"].to_i
+      games = fetch_all_paginate(interval: 5) do |_, i|
+        "SELECT id,gamename,furigana,brandname AS brand_id,median,okazu,axis_of_soft_or_hard FROM gamelist OFFSET #{i * 8000} LIMIT 8000"
       end
+      game_size = games.map{|g| g["id"] }.uniq.size
+      raise "ゲームの数(#{game_size})とCOUNTクエリの結果(#{size})が一致していない" if game_size != expected_size
+      games.sort_by{|g| g["id"].to_i }
     end
   end
 end
