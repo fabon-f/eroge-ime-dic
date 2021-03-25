@@ -24,7 +24,7 @@ class ErogeImeDic::DictionaryBuilder
 
     d = []
     hash.sort_by{|k,v| k}.each do |yomi, words|
-      words.uniq.each do |word|
+      words.uniq.sort.each do |word|
         d.push([yomi, word[0], word[1]])
       end
     end
