@@ -62,3 +62,5 @@
 
 1. `bundle install`
 1. `bundle exec ./exe/make_dict`
+
+一度ErogameScapeから取得したデータは`cache/`以下にキャッシュされています。再度取得したい場合は`rm cache/*`を実行するなどしてキャッシュを削除してください。
