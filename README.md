@@ -27,6 +27,7 @@
 * `eroge-notnukige-dic`: 非抜きゲーの名前の辞書
 * `eroge-game-dic`: エロゲの名前の辞書
 * `eroge-music-dic`: エロゲソングの辞書
+* `eroge-creator-dic`: エロゲのクリエイター(絵師、ライター、音楽、歌手、声優など)の辞書
 
 ### Microsoft IME
 
