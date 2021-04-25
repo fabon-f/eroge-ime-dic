@@ -206,6 +206,20 @@ module ErogeImeDic::DictionarySource
       end
       game_entries + split_yomi(game_entries)
     end
+
+    def creators
+      creators = restore_cache(File.join(CACHE_DIRECTORY, "creators")) { ErogeImeDic::ErogameScape.creators }
+      m = Modification.new(creators) do |c|
+        creator_yomi = normalize_yomi(c["furigana"].to_hiragana)
+        [creator_yomi, c["name"]]
+      end
+      creator_entries = m.run do
+        # @type self: Modification
+      end
+      ignored, rest = creator_entries.partition{|c| c[1].include?("(") }
+      STDERR.puts ignored.map{|e| [creators.find{|c| c["name"] == e[1] && c["furigana"] == e[0].to_katakana }["id"], *e].inspect }.take(200)
+      rest
+    end
   end
 
   class Modification
@@ -219,6 +233,9 @@ module ErogeImeDic::DictionarySource
     end
     def add(furigana, name)
       @additions.push([furigana, name])
+    end
+    def addl(arr)
+      @additions.concat(arr.each_slice(2).to_a)
     end
     def del(id = nil, name = nil, **conditions)
       conditions[:id] = id.to_s if conditions[:id] == nil && id != nil

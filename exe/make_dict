@@ -10,6 +10,7 @@ music_data = ErogeImeDic::DictionarySource.musics
 game_data = ErogeImeDic::DictionarySource.games
 game_data_without_nuki = ErogeImeDic::DictionarySource.games(include_nuki: false)
 game_data_without_doujin = ErogeImeDic::DictionarySource.games(include_doujin: false)
+creator_data = ErogeImeDic::DictionarySource.creators
 
 DIC_DIRECTORY = File.expand_path("../dic", __dir__)
 MOZC_DIR = File.join(DIC_DIRECTORY, "google_ime")
@@ -63,7 +64,14 @@ ErogeImeDic::DictionaryBuilder.new(data: game_data_without_doujin).tap do |b|
   b.generate_kotoeri(File.join(KOTOERI_DIR, "eroge-corp-game-dic.plist"))
 end
 
-dic_builder = ErogeImeDic::DictionaryBuilder.new(data: chara_data + brand_data + music_data + game_data)
+ErogeImeDic::DictionaryBuilder.new(data: creator_data).tap do |b|
+  b.generate_mozc(File.join(MOZC_DIR, "eroge-creator-dic.txt"))
+  b.generate_atok(File.join(ATOK_DIR, "eroge-creator-dic.txt"))
+  b.generate_msime(File.join(MSIME_DIR, "eroge-creator-dic.txt"))
+  b.generate_kotoeri(File.join(KOTOERI_DIR, "eroge-creator-dic.plist"))
+end
+
+dic_builder = ErogeImeDic::DictionaryBuilder.new(data: chara_data + brand_data + music_data + game_data + creator_data)
 dic_builder.generate_mozc(File.join(MOZC_DIR, "eroge-dic.txt"))
 dic_builder.generate_atok(File.join(ATOK_DIR, "eroge-dic.txt"))
 dic_builder.generate_msime(File.join(MSIME_DIR, "eroge-dic.txt"))

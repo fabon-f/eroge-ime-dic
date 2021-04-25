@@ -66,5 +66,9 @@ module ErogeImeDic::ErogameScape
       raise "ゲームの数(#{game_size})とCOUNTクエリの結果(#{size})が一致していない" if game_size != expected_size
       games.sort_by{|g| g["id"].to_i }
     end
+
+    def creators
+      query("SELECT createrlist.id,createrlist.name,createrlist.furigana,COUNT(*) FROM shokushu INNER JOIN createrlist on shokushu.creater = createrlist.id GROUP BY createrlist.id,createrlist.name,createrlist.furigana HAVING COUNT(*) >= 3 ORDER BY count DESC")
+    end
   end
 end
