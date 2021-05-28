@@ -20,7 +20,7 @@
 * [エロゲの固有名詞が変換できなくて困ったので変換用辞書を自作した話](https://yuyusuki.hatenablog.com/entry/2021/03/12/180356)
 
 
-## ダウンロード
+## ダウンロード・インストール
 
 生成された辞書は[Googleドライブ](https://drive.google.com/drive/folders/168quurfp8LGiZXORQTkxhXEVARpYdr2J?usp=sharing)に置いてあります。自分が使っているIMEに応じて必要なファイルをダウンロードしてください。
 
@@ -60,12 +60,16 @@
 
 生成用コード、辞書、ともにCC0(パブリックドメイン)です。利用・改造・再配布などは自己責任の範囲で全て自由です。
 
-## ビルドに必要なもの
+## 自前でビルドしたい人へ
+
+Googleドライブからダウンロードすれば十分だと思いますが、もしかしたら自分でビルドしたい人がいるかもしれないので。
+
+### ビルドに必要なもの
 
 * MeCab
 * mecab-ipadic-NEologd
 
-## ビルド方法
+### ビルド方法
 
 1. `bundle install`
 1. `bundle exec ./exe/make_dict`
