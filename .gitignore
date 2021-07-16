@@ -7,3 +7,5 @@
 !/cache/.keep
 /dic
 /dist
+
+.envrc
