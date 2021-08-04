@@ -2,7 +2,7 @@ target :lib do
   signature "sig"
 
   check "lib"
-  check "exe"
+  check "exe/make_dict"
   # check "Gemfile"
 
   # library "pathname", "set"       # Standard libraries
