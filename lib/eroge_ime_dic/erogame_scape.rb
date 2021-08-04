@@ -63,7 +63,7 @@ module ErogeImeDic::ErogameScape
         "SELECT id,gamename,furigana,brandname AS brand_id,median,okazu,axis_of_soft_or_hard FROM gamelist OFFSET #{i * 8000} LIMIT 8000"
       end
       game_size = games.map{|g| g["id"] }.uniq.size
-      raise "ゲームの数(#{game_size})とCOUNTクエリの結果(#{size})が一致していない" if game_size != expected_size
+      raise "ゲームの数(#{game_size})とCOUNTクエリの結果(#{expected_size})が一致していない" if game_size != expected_size
       games.sort_by{|g| g["id"].to_i }
     end
 
