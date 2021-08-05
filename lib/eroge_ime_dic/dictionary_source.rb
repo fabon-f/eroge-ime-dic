@@ -529,6 +529,7 @@ module ErogeImeDic::DictionarySource
         del 27643, "えびかれー伯爵(金閉開羅巧夢)"
         addl %w(えびかれーはくしゃく えびかれー伯爵 ことひらたくむ 金閉開羅巧)
       end
+      creator_entries.concat(YAML.load_file(ErogeImeDic::Util.local_path("data/creator_extra.yml")))
       ignored, rest = creator_entries.partition{|c| c[1].include?("(") }
       STDERR.puts ignored.map{|e| [creators.find{|c| c["name"] == e[1] && c["furigana"] == e[0].to_katakana }["id"], *e].inspect }.take(200)
       rest
