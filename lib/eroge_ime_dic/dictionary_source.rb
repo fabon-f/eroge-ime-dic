@@ -4,9 +4,10 @@ require "natto"
 require "yaml"
 
 module ErogeImeDic::DictionarySource
-  CACHE_DIRECTORY = File.expand_path("../../cache", __dir__)
+  CACHE_DIRECTORY = ErogeImeDic::Util.local_path("cache")
   class << self
     using ErogeImeDic::Util
+    include ErogeImeDic::Util
     def restore_cache(path, &block)
       File.open(path) do |f|
         return Marshal.restore(f)
@@ -67,7 +68,7 @@ module ErogeImeDic::DictionarySource
         [character_yomi, character_name]
       end
 
-      YAML.load_file(File.expand_path("../../data/eroge-character-extra.yml", __dir__)).each do |brand, games|
+      YAML.load_file(ErogeImeDic::Util.local_path("data/eroge-character-extra.yml")).each do |brand, games|
         games.each do |game, characters|
           characters.each { |character| character_data << character.map{|t| t.gsub(/[[:blank:]]+/, "") } }
         end
@@ -550,24 +551,26 @@ module ErogeImeDic::DictionarySource
       @additions.concat(arr.each_slice(2).to_a)
     end
     def del(id = nil, name = nil, **conditions)
-      conditions[:id] = id.to_s if conditions[:id] == nil && id != nil
-      conditions[:name] = name if conditions[:name] == nil && name != nil
+      conditions[:id] = id.to_s if conditions[:id] == nil && !id.nil?
+      conditions[:name] = name if conditions[:name] == nil && !name.nil?
       @deletions.push(conditions)
     end
     def spl(id = nil, name = nil, **conditions)
-      conditions[:id] = id.to_s if conditions[:id] == nil && id != nil
-      conditions[:name] = name if conditions[:name] == nil && name != nil
+      conditions[:id] = id.to_s if conditions[:id] == nil && !id.nil?
+      conditions[:name] = name if conditions[:name] == nil && !name.nil?
       @splits.push(conditions)
     end
     def ign(id = nil, name = nil, **conditions)
-      conditions[:id] = id.to_s if conditions[:id] == nil && id != nil
-      conditions[:name] = name if conditions[:name] == nil && name != nil
+      conditions[:id] = id.to_s if conditions[:id] == nil && !id.nil?
+      conditions[:name] = name if conditions[:name] == nil && !name.nil?
       @ignore_parenthesis.push(conditions)
     end
     def run(&block)
       instance_eval(&block)
       # @type var match: ^(Hash, Array[Hash]) -> bool
       match = lambda do |hash, conditions|
+        # @type var hash: Hash
+        # @type var conditions: Array[Hash]
         conditions.any? do |cond|
           cond.all?{|k,v|hash[k.to_s]==v}
         end

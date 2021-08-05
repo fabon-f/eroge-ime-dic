@@ -1,23 +1,29 @@
 # Classes
+
+class String
+  def to_katakana: -> (String)
+  def to_hiragana: -> (String)
+end
+
 module ErogeImeDic
   module Util
-    def to_katakana: -> untyped
-    def to_hiragana: -> untyped
+    def self?.local_path: (String) -> String
   end
 
   module ErogameScape
     def self.query: (String sql) -> Array[Hash[String,String]]
-    def self.fetch_all_paginate: (?interval: Integer) { (nil|Hash[String,String]) -> String } -> Array[untyped]
-    def self.characters: -> Array[untyped]
-    def self.brands: -> Array[untyped]
-    def self.musics: -> Array[untyped]
-    def self.games: -> Array[untyped]
+    def self.fetch_all_paginate: (?interval: Integer) { (nil|Hash[String,String], Integer) -> String } -> Array[Hash[String,String]]
+    def self.characters: -> Array[Hash[String,String]]
+    def self.brands: -> Array[Hash[String,String]]
+    def self.musics: -> Array[Hash[String,String]]
+    def self.games: -> Array[Hash[String,String]]
+    def self.creators: -> Array[Hash[String,String]]
   end
 
   class DictionaryBuilder
-    attr_accessor data: Array[Array[untyped]]
+    attr_accessor data: Array[Array[String]]
     attr_accessor header_comment: String
-    def initialize: (?data: Array[Array[untyped]], ?header_comment: String) -> void
+    def initialize: (?data: Array[Array[String]], ?header_comment: String) -> void
     def sort!: -> void
     def generate_mozc: (String path) -> void
     def generate_atok: (String path) -> void
@@ -43,6 +49,7 @@ module ErogeImeDic
     def self.brands: -> Array[[String, String]]
     def self.musics: -> Array[[String, String]]
     def self.games: (?include_nuki: bool, ?include_doujin: bool) -> Array[[String, String]]
+    def self.creators: -> Array[[String, String]]
 
     class Modification
       @deletions: Array[Hash[Symbol, String]]
@@ -57,7 +64,16 @@ module ErogeImeDic
       def del: (?Integer? id, ?String? name, **String) -> void
       def spl: (?Integer? id, ?String? name, **String) -> void
       def ign: (?Integer? id, ?String? name, **String) -> void
+      def addl: (Array[String]) -> void
       def run: { (Modification) -> void } -> Array[[String, String]]
     end
   end
 end
+
+
+
+DIC_DIRECTORY: String
+MOZC_DIR: String
+ATOK_DIR: String
+MSIME_DIR: String
+KOTOERI_DIR: String

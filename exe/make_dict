@@ -12,7 +12,7 @@ game_data_without_nuki = ErogeImeDic::DictionarySource.games(include_nuki: false
 game_data_without_doujin = ErogeImeDic::DictionarySource.games(include_doujin: false)
 creator_data = ErogeImeDic::DictionarySource.creators
 
-DIC_DIRECTORY = File.expand_path("../dic", __dir__)
+DIC_DIRECTORY = ErogeImeDic::Util.local_path("dic")
 MOZC_DIR = File.join(DIC_DIRECTORY, "google_ime")
 ATOK_DIR = File.join(DIC_DIRECTORY, "atok")
 MSIME_DIR = File.join(DIC_DIRECTORY, "msime")

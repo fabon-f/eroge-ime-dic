@@ -16,10 +16,11 @@ module ErogeImeDic::ErogameScape
       end.compact
     end
 
-    # block.call(nil) -> first SQL
-    # block.call(last_row) -> next SQL
+    # block.call(nil, i) -> first SQL
+    # block.call(last_row, i) -> next SQL
     def fetch_all_paginate(interval: 3, &block)
       # @type var last_row: nil|Hash
+      # @type var result: Array[Hash[String,String]]
       last_row = nil
       result = []
       0.step do |i|
@@ -58,7 +59,8 @@ module ErogeImeDic::ErogameScape
     end
 
     def games
-      expected_size = query("SELECT COUNT(*) from gamelist").first["count"].to_i
+      expected_size = query("SELECT COUNT(*) from gamelist").first&.fetch("count")&.to_i
+      raise "ゲーム数の取得に失敗" if expected_size.nil?
       games = fetch_all_paginate(interval: 5) do |_, i|
         "SELECT id,gamename,furigana,brandname AS brand_id,median,okazu,axis_of_soft_or_hard FROM gamelist OFFSET #{i * 8000} LIMIT 8000"
       end
