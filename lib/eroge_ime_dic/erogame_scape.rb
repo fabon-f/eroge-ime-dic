@@ -7,7 +7,7 @@ module ErogeImeDic::ErogameScape
   class << self
     def query(sql)
       endpoint = "https://erogamescape.dyndns.org/~ap2/ero/toukei_kaiseki/sql_for_erogamer_form.php"
-      response_html = HTTPClient.new.post_content(endpoint, { "sql" => sql })
+      response_html = HTTPClient.new.tap{ |c| c.ssl_config.set_default_paths }.post_content(endpoint, { "sql" => sql })
       document = Oga.parse_html(response_html)
       columns = document.css("#query_result_main th").map(&:text)
       document.css("#query_result_main tr").map do |row|
