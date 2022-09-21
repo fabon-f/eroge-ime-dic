@@ -528,6 +528,21 @@ module ErogeImeDic::DictionarySource
         spl 9255, "祭大!(祭大!!)"
         del 27643, "えびかれー伯爵(金閉開羅巧夢)"
         addl %w(えびかれーはくしゃく えびかれー伯爵 ことひらたくむ 金閉開羅巧)
+        del 2670, "ミリオンバンブー(有限会社バンブー)"
+        add "みりおんばんぶー", "ミリオンバンブー"
+        del 20854, "よもぎかすみ(蓬かすみ)"
+        addl %w(よもぎかすみ よもぎかすみ よもぎかすみ 蓬かすみ)
+        del 20373, "株式会社キューブ(CUBE)"
+        del 19409, "マッツミュージックスタジオ(M.U.T.S.MusicStudio)"
+        addl %w(まっつみゅーじっくすたじお マッツミュージックスタジオ まっつみゅーじっくすたじお MUTS\ MUSIC\ STUDIO)
+        del 15315, "早瀬ゃょぃ(早瀬弥生、Vtuber早瀬やよい)"
+        addl %w(はやせゃょぃ 早瀬ゃょぃ はやせやよい 早瀬弥生 はやせやよい 早瀬やよい)
+        del 14673, "松本文紀(szak)"
+        addl %w(まつもとふみのり 松本文紀 すざく szak)
+        del 2381, "吉宗鋼紀(まふまふ仔犬ちゃん、ヨシダという生き物)"
+        addl %w(よしむねこうき 吉宗鋼紀 まふまふこいぬちゃん まふまふ仔犬ちゃん よしだといういきもの ヨシダという生き物)
+        del 20703, "プリズムビジョン株式会社(PRHYTHM VISION)"
+        addl %w(ぷりずむびじょん プリズムビジョン ぷりずむびじょん PRHYTHM\ VISION)
       end
       creator_entries.concat(YAML.load_file(ErogeImeDic::Util.local_path("data/creator_extra.yml")))
       ignored, rest = creator_entries.partition{|c| c[1].include?("(") }
