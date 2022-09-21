@@ -5,6 +5,7 @@ target :lib do
   check "exe/make_dict"
   # check "Gemfile"
 
+  library "fileutils", "nkf"
   # library "pathname", "set"       # Standard libraries
   # library "strong_json"           # Gems
 end

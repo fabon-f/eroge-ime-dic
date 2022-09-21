@@ -1,0 +1,12 @@
+module Natto
+  class MeCab
+    def initialize: (? Hash[Symbol, untyped] | String options) -> void
+
+    def dicts: () -> Array[DictionaryInfo]
+    def parse: (String text) -> String
+  end
+
+  class DictionaryInfo
+    attr_reader filepath: String
+  end
+end

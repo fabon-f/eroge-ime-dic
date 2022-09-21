@@ -5,9 +5,11 @@ require "nkf"
 module ErogeImeDic::Util
   refine String do
     def to_katakana
+      # @type self: String
       NKF.nkf("-w --katakana", self)
     end
     def to_hiragana
+      # @type self: String
       NKF.nkf("-w --hiragana", self)
     end
   end

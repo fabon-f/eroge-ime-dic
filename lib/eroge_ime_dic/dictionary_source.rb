@@ -29,9 +29,10 @@ module ErogeImeDic::DictionarySource
     end
 
     def neologd_path
-      return ENV["MECAB_NEOLOGD_PATH"] if ENV.has_key?("MECAB_NEOLOGD_PATH")
+      return ENV.fetch("MECAB_NEOLOGD_PATH") if ENV.has_key?("MECAB_NEOLOGD_PATH")
       nm = Natto::MeCab.new
       neologd_filepath = nm.dicts.map(&:filepath).detect{|p| p.include?("mecab-ipadic-neologd")}
+      raise "mecab-ipadic-NEologd not found" if neologd_filepath.nil?
       File.dirname(neologd_filepath)
     end
 
