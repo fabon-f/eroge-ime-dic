@@ -6,6 +6,7 @@ target :lib do
   # check "Gemfile"
 
   library "fileutils", "nkf"
+  library "erogamescape"
   # library "pathname", "set"       # Standard libraries
   # library "strong_json"           # Gems
 end
